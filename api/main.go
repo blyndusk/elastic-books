@@ -1,35 +1,40 @@
 package main
 
 import (
-	"net/http"
+	"context"
+	"fmt"
 
-	"github.com/blyndusk/elastic-books/api/database"
-	"github.com/blyndusk/elastic-books/api/router"
-	"github.com/gin-gonic/gin"
+	"github.com/olivere/elastic"
+	"github.com/sirupsen/logrus"
 )
 
-func main() {
-	setupServer()
+type Book struct {
+	Name   string `json:"name"`
+	Author string `json:"author"`
+	Resume string `json:"resume"`
 }
 
-func setupServer() *gin.Engine {
-	database.Connect()
-	database.Migrate()
+func GetESClient() (*elastic.Client, error) {
 
-	r := gin.Default()
+	client, err := elastic.NewClient(elastic.SetURL("http://localhost:9200"),
+		elastic.SetSniff(false),
+		elastic.SetHealthcheck(false))
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "[elastic-books API]",
-		})
-	})
+	fmt.Println("ES initialized...")
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
-	router.Setup(r)
-	r.Run(":3333")
-	return r
+	return client, err
+
+}
+
+func main() {
+
+	ctx := context.Background()
+	esclient, err := GetESClient()
+	logrus.Info(ctx, esclient)
+	if err != nil {
+		fmt.Println("Error initializing : ", err)
+		panic("Client fail ")
+	}
+
+
 }
