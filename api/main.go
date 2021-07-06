@@ -36,5 +36,4 @@ func main() {
 		panic("Client fail ")
 	}
 
-
 }
