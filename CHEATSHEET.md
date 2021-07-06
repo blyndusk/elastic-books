@@ -45,7 +45,21 @@ e.g. `PUT localhost:9200/books/_doc`
 }
 ```
 
-## Query the data
+## Query the data (simple match)
+
+```bash
+POST localhost:9200/_search
+```
+
+```json
+{
+  "query": {
+    "match": { "name": "Martine" }
+  }
+}
+```
+
+## Query the data (multi-match)
 
 ```bash
 POST localhost:9200/_search
