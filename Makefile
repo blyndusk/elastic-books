@@ -9,11 +9,10 @@ start: ## Up the docker-compose without cache or orphans
 	docker-compose up \
 	--detach \
 	--build \
-	--remove-orphans \
-	--force-recreate
+	--remove-orphans
 
 stop: ## Down the docker-compose 
-	docker-compose down
+	docker-compose stop
 
 logs: ## Display logs of your containers 
 	docker-compose logs --follow
