@@ -13,42 +13,61 @@ services:
     networks:
       - main
 
-  postgres:
-    image: postgres:latest
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.2
+    container_name: es01
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=db
-      - DATABASE_HOST=postgres
-    ports:
-      - 5432:5432
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - cluster.initial_master_nodes=es01
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
     networks:
       - main
 
-  adminer:
-    build:
-      context: .
-      dockerfile: .docker/adminer/Dockerfile
-    environment:
-      ADMINER_DB: db
-      ADMINER_DRIVER: pgsql
-      ADMINER_PASSWORD: root
-      ADMINER_SERVER: postgres
-      ADMINER_USERNAME: root
-      ADMINER_AUTOLOGIN: 1
-      ADMINER_NAME: Books search DB
-    restart: always
+  # adminer:
+  #   build:
+  #     context: .
+  #     dockerfile: .docker/adminer/Dockerfile
+  #   environment:
+  #     ADMINER_DB: db
+  #     ADMINER_DRIVER: pgsql
+  #     ADMINER_PASSWORD: root
+  #     ADMINER_SERVER: postgres
+  #     ADMINER_USERNAME: root
+  #     ADMINER_AUTOLOGIN: 1
+  #     ADMINER_NAME: Books search DB
+  #   restart: always
+  #   ports:
+  #     - 3334:8080
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - main
+
+  kib01:
+    image: docker.elastic.co/kibana/kibana:7.13.2
+    container_name: kib01
     ports:
-      - 3334:8080
-    depends_on:
-      - postgres
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://es01:9200
+      ELASTICSEARCH_HOSTS: '["http://es01:9200"]'
     networks:
       - main
 
 volumes:
   postgres:
+  data01:
+    driver: local
 
 networks:
   main:
