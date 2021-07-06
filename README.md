@@ -1,31 +1,31 @@
 <h1 align="center">Repo Template</h1>
 <p align="center">
-    <a href="https://github.com/blyndusk/repo-template/releases">
-      <img src="https://img.shields.io/github/v/release/blyndusk/repo-template"/>
+    <a href="https://github.com/blyndusk/elastic-books/releases">
+      <img src="https://img.shields.io/github/v/release/blyndusk/elastic-books"/>
     </a>
-    <a href="https://github.com/blyndusk/repo-template/commits/main">
-      <img src="https://img.shields.io/github/release-date/blyndusk/repo-template"/>
+    <a href="https://github.com/blyndusk/elastic-books/commits/main">
+      <img src="https://img.shields.io/github/release-date/blyndusk/elastic-books"/>
     </a>
-    <a href="https://github.com/blyndusk/repo-template/issues">
-      <img src="https://img.shields.io/github/issues/blyndusk/repo-template"/>
+    <a href="https://github.com/blyndusk/elastic-books/issues">
+      <img src="https://img.shields.io/github/issues/blyndusk/elastic-books"/>
     </a>
-    <a href="https://github.com/blyndusk/repo-template/pulls">
-      <img src="https://img.shields.io/github/issues-pr/blyndusk/repo-template"/>
+    <a href="https://github.com/blyndusk/elastic-books/pulls">
+      <img src="https://img.shields.io/github/issues-pr/blyndusk/elastic-books"/>
     </a>
-    <a href="https://github.com/blyndusk/repo-template/blob/main/LICENSE">
-      <img src="https://img.shields.io/github/license/blyndusk/repo-template"/>
+    <a href="https://github.com/blyndusk/elastic-books/blob/main/LICENSE">
+      <img src="https://img.shields.io/github/license/blyndusk/elastic-books"/>
     </a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/blyndusk/repo-template/actions/workflows/go.yml">
-      <img src="https://github.com/blyndusk/repo-template/actions/workflows/go.yml/badge.svg"/>
+  <a href="https://github.com/blyndusk/elastic-books/actions/workflows/go.yml">
+      <img src="https://github.com/blyndusk/elastic-books/actions/workflows/go.yml/badge.svg"/>
     </a>
-     <a href="https://github.com/blyndusk/repo-template/actions/workflows/docker.yml">
-      <img src="https://github.com/blyndusk/repo-template/actions/workflows/docker.yml/badge.svg"/>
+     <a href="https://github.com/blyndusk/elastic-books/actions/workflows/docker.yml">
+      <img src="https://github.com/blyndusk/elastic-books/actions/workflows/docker.yml/badge.svg"/>
     </a>
-     <a href="https://github.com/blyndusk/repo-template/actions/workflows/release.yml">
-      <img src="https://github.com/blyndusk/repo-template/actions/workflows/release.yml/badge.svg"/>
+     <a href="https://github.com/blyndusk/elastic-books/actions/workflows/release.yml">
+      <img src="https://github.com/blyndusk/elastic-books/actions/workflows/release.yml/badge.svg"/>
     </a>
 </p>
 
@@ -100,7 +100,7 @@ You can **add, edit or remove** them. To automatically update these labels, you 
 
 ### A - CI
 
-[![GO](https://github.com/blyndusk/repo-template/actions/workflows/go.yml/badge.svg)](https://github.com/blyndusk/repo-template/actions/workflows/go.yml)
+[![GO](https://github.com/blyndusk/elastic-books/actions/workflows/go.yml/badge.svg)](https://github.com/blyndusk/elastic-books/actions/workflows/go.yml)
 
 The **CI** workflow is located at [.github/workflows/go.yml](.github/workflows/go.yml). It's triggered a **each push** on **all branches**.
 
@@ -113,7 +113,7 @@ It consist of:
 
 ### B - CD
 
-[![DOCKER](https://github.com/blyndusk/repo-template/actions/workflows/docker.yml/badge.svg)](https://github.com/blyndusk/repo-template/actions/workflows/docker.yml)
+[![DOCKER](https://github.com/blyndusk/elastic-books/actions/workflows/docker.yml/badge.svg)](https://github.com/blyndusk/elastic-books/actions/workflows/docker.yml)
 
 The **CD** workflow is located at [.github/workflows/docker.yml](.github/workflows/docker.yml). It's triggered a **each push** on **`main` branch**.
 
@@ -132,9 +132,9 @@ LABEL org.opencontainers.image.source = "https://github.com/<username>/<reposito
 
 ### C - Release
 
-[![RELEASE](https://github.com/blyndusk/repo-template/actions/workflows/release.yml/badge.svg)](https://github.com/blyndusk/repo-template/actions/workflows/release.yml)
+[![RELEASE](https://github.com/blyndusk/elastic-books/actions/workflows/release.yml/badge.svg)](https://github.com/blyndusk/elastic-books/actions/workflows/release.yml)
 
-The **release** workflow is located at [.github/workflows/release.yml](.github/workflows/release.yml). It's triggered **manually by user input** at: [Actions > RELEASE](https://github.com/blyndusk/repo-template/actions/workflows/release.yml).
+The **release** workflow is located at [.github/workflows/release.yml](.github/workflows/release.yml). It's triggered **manually by user input** at: [Actions > RELEASE](https://github.com/blyndusk/elastic-books/actions/workflows/release.yml).
 
 > IMPORTANT: you need to set the **image tag** in the action input, for the action to be able to push the docker image and create a release **with a specific version**. The image tag is a [SemVer](https://en.wikipedia.org/wiki/Software_versioning) tag, e.g. `1.0.2`.
 

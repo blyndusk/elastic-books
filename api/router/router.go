@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/blyndusk/repo-template/api/controllers"
+	"github.com/blyndusk/elastic-books/api/controllers"
 	"github.com/gin-gonic/gin"
 )
 

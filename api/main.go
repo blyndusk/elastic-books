@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/blyndusk/repo-template/api/database"
-	"github.com/blyndusk/repo-template/api/router"
+	"github.com/blyndusk/elastic-books/api/database"
+	"github.com/blyndusk/elastic-books/api/router"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +20,7 @@ func setupServer() *gin.Engine {
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "[repo-template API]",
+			"message": "[elastic-books API]",
 		})
 	})
 

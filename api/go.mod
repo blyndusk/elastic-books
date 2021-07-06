@@ -1,4 +1,4 @@
-module github.com/blyndusk/repo-template/api
+module github.com/blyndusk/elastic-books/api
 
 go 1.16
 

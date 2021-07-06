@@ -3,13 +3,13 @@ FROM golang:alpine as builder
 # ----- SETUP -----
 
 # Set the image source for ghcr.io
-LABEL org.opencontainers.image.source = "https://github.com/blyndusk/repo-template"
+LABEL org.opencontainers.image.source = "https://github.com/blyndusk/elastic-books"
 
 # Enable Go modules
 ENV GO111MODULE=on
 
 # Set the current working with go absolute path
-WORKDIR /go/src/github.com/blyndusk/repo-template/api
+WORKDIR /go/src/github.com/blyndusk/elastic-books/api
 
 # ----- INSTALL -----
 
@@ -34,10 +34,10 @@ RUN go build -o ./tmp/main ./
 FROM alpine
 
 # Copy binary
-COPY --from=builder /go/src/github.com/blyndusk/repo-template/api/ /repo-template/api/
+COPY --from=builder /go/src/github.com/blyndusk/elastic-books/api/ /elastic-books/api/
 
 # Set current directory
-WORKDIR /repo-template/api/
+WORKDIR /elastic-books/api/
 
 # Use executable
-ENTRYPOINT [ "/repo-template/api/tmp/main" ]
+ENTRYPOINT [ "/elastic-books/api/tmp/main" ]

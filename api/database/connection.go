@@ -8,7 +8,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"github.com/blyndusk/repo-template/api/helpers"
+	"github.com/blyndusk/elastic-books/api/helpers"
 )
 
 var Db *gorm.DB

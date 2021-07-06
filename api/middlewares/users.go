@@ -3,9 +3,9 @@ package middlewares
 import (
 	"net/http"
 
-	"github.com/blyndusk/repo-template/api/database"
-	"github.com/blyndusk/repo-template/api/helpers"
-	"github.com/blyndusk/repo-template/api/models"
+	"github.com/blyndusk/elastic-books/api/database"
+	"github.com/blyndusk/elastic-books/api/helpers"
+	"github.com/blyndusk/elastic-books/api/models"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
