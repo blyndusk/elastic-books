@@ -33,7 +33,7 @@ func Create(Name string, Author string, Resume string) {
 	logrus.Info("New book inserted !")
 }
 
-func Read(Query string, SearchType string) {
+func Search(Query string, SearchType string) {
 	var books models.Books
 
 	// init search source
@@ -66,6 +66,19 @@ func Read(Query string, SearchType string) {
 
 	for _, s := range books {
 		logrus.Info(fmt.Sprintf("Book found: \nName: %s\nAuthor: %s\nResume: %s \n", s.Name, s.Author, s.Resume))
+	}
+}
+
+func Read(Id string) {
+	// Read book with specified ID
+	book, err := Esclient.Get().
+		Index("twitter").
+		Id(Id).
+		Do(Ctx)
+
+	helpers.ExitOnError("Read Book", err)
+	if book.Found {
+		logrus.Info("Book found: \n %s", book.Fields)
 	}
 }
 
