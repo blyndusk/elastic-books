@@ -11,7 +11,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func Create(elastic.Client esclient, string Name, string Author, string Resume) {
+var Ctx = context.Background()
+
+func Create(esclient elastic.Client, Name string, Author string, Resume string) {
 	// creating book object
 	newBook := models.Book{
 		Name:   Name,
@@ -23,16 +25,15 @@ func Create(elastic.Client esclient, string Name, string Author, string Resume) 
 	js := string(dataJSON)
 
 	// insert new book
-	ctx := context.Background()
 	_, err = esclient.Index().
 		Index("books").
 		BodyJson(js).
-		Do(ctx)
+		Do(Ctx)
 	helpers.ExitOnError("insert new book", err)
 	logrus.Info("New book inserted !")
 }
 
-func Read(elastic.Client esclient, string Query, string SearchType) {
+func Read(esclient elastic.Client, Query string, SearchType string) {
 	var books models.Books
 
 	// init search source
@@ -44,14 +45,14 @@ func Read(elastic.Client esclient, string Query, string SearchType) {
 	queryJs, err2 := json.Marshal(queryStr)
 
 	if err1 != nil || err2 != nil {
-		logrus.Fatal("query", err, err)
+		logrus.Fatal("query", err1, err2)
 	}
 	logrus.Info("Final ESQuery ", string(queryJs))
 
 	// init search service
 	searchService := esclient.Search().Index("books").SearchSource(searchSource)
 
-	searchResult, err := searchService.Do(ctx)
+	searchResult, err := searchService.Do(Ctx)
 	helpers.ExitOnError("get search query", err)
 
 	// searching
@@ -68,36 +69,32 @@ func Read(elastic.Client esclient, string Query, string SearchType) {
 	}
 }
 
-func Update(elastic.Client esclient, int Id, string Name, string Author, string Resume) {
-	// Update book with specified ID
-	newBook := models.Book{
-		Name:   Name,
-		Author: Author,
-		Resume: Resume,
-	}
-	dataJSON, err := json.Marshal(newBook)
-	helpers.ExitOnError("create new book", err)
-	js := string(dataJSON)
+// func Update(esclient elastic.Client, Id string, Name string, Author string, Resume string) {
+// 	// Update book with specified ID
+// 	newBook := models.Book{
+// 		Name:   Name,
+// 		Author: Author,
+// 		Resume: Resume,
+// 	}
+// 	dataJSON, err := json.Marshal(newBook)
+// 	helpers.ExitOnError("create new book", err)
+// 	js := string(dataJSON)
 
-	ctx := context.Background()
-	_, err := client.Update().
-		Index("books").
-		Id(Id).
-		BodyJson(js).
-		Do(ctx)
-	helpers.ExitOnError("Update Book", err)
-	logrus.Info("Book has been updated !")
-}
+// 	_, err = esclient.Update().
+// 		Index("books").
+// 		Id(Id).
+// 		BodyJson(js).
+// 		Do(Ctx)
+// 	helpers.ExitOnError("Update Book", err)
+// 	logrus.Info("Book has been updated !")
+//}
 
-func Delete(elastic.Client esclient, int Id) {
+func Delete(esclient elastic.Client, Id string) {
 	// Delete book with specified ID
-	ctx := context.Background()
 	_, err := esclient.Delete().
 		Index("books").
 		Id(Id).
-		BodyJson(js).
-		Do(ctx)
+		Do(Ctx)
 	helpers.ExitOnError("Delete Book", err)
 	logrus.Info("Book has been deleted !")
 }
-

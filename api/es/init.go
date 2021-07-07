@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const mapping = {
+const mapping = `{
 	"settings": {
 	  	"number_of_shards": 1,
 	  	"number_of_replicas": 1
@@ -24,7 +24,7 @@ const mapping = {
 			}
 	  	}
 	}
-}
+}`
 
 func InitClient() (*elastic.Client, error) {
 	client, err := elastic.NewClient(elastic.SetURL("http://es01:9200"),
