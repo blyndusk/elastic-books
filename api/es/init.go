@@ -21,10 +21,10 @@ const mapping = `{
 		 		"type": "text"
 			},
 			"author": {
-		  		"type": "integer"
+		  		"type": "text"
 			},
 			"resume": {
-		  		"type": "float"
+		  		"type": "text"
 			}
 	  	}
 	}
