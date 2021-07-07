@@ -180,6 +180,10 @@ Up the containers with **full cache reset** to avoid cache errors.
 
 **Lint** the Go files using `gofmt`.
 
+#### `make seed` <!-- omit in toc -->
+
+**Seed** the Elasticsearch database with sample data
+
 ## VI - License
 
 Under [MIT](./LICENSE) license.

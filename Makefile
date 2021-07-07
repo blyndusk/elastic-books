@@ -18,3 +18,5 @@ lint:
 
 .PHONY: help
 
+seed: ## Populates Elasticsearch with sample data
+	curl -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/shakespeare/doc/_bulk?pretty' --data-binary @dataset.json
