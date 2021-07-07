@@ -8,13 +8,24 @@ import (
 )
 
 func SearchBook(c *gin.Context) {
-
 	query := c.Query("query")
 	searchType := c.Query("type")
-	result := es.Search(query, searchType)
+	data := es.SearchBook(query, searchType)
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": es.Esclient.String(),
-		"result":  result,
+		"message": "Here is your search results",
+		"data":    data,
+	})
+}
+
+func CreateBook(c *gin.Context) {
+	name := c.Query("name")
+	author := c.Query("author")
+	resume := c.Query("resume")
+	data := es.CreateBook(name, author, resume)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "New book created",
+		"data":    data,
 	})
 }

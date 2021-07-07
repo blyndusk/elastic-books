@@ -21,12 +21,7 @@ func esRoutes(r *gin.Engine) {
 
 	r.POST("/books/search", server.SearchBook)
 
-	r.GET("/books/:id", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"goal":   "[get] a book by ID",
-			"status": "not implemented",
-		})
-	})
+	r.POST("/books/", server.CreateBook)
 
 	r.PUT("/books/:id", func(c *gin.Context) {
 		c.JSON(200, gin.H{

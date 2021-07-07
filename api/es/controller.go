@@ -13,27 +13,7 @@ import (
 
 var Ctx = context.Background()
 
-func Create(name string, author string, resume string) {
-	// creating book object
-	newBook := models.Book{
-		Name:   name,
-		Author: author,
-		Resume: resume,
-	}
-	dataJSON, err := json.Marshal(newBook)
-	helpers.ExitOnError("create new book", err)
-	js := string(dataJSON)
-
-	// insert new book
-	_, err = Esclient.Index().
-		Index("books").
-		BodyJson(js).
-		Do(Ctx)
-	helpers.ExitOnError("insert new book", err)
-	logrus.Info("New book inserted !")
-}
-
-func Search(query string, searchType string) models.Books {
+func SearchBook(query string, searchType string) models.Books {
 	var books models.Books
 
 	// init search source
@@ -70,7 +50,28 @@ func Search(query string, searchType string) models.Books {
 	return books
 }
 
-func Read(id string) {
+func CreateBook(name string, author string, resume string) models.Book {
+	// creating book object
+	book := models.Book{
+		Name:   name,
+		Author: author,
+		Resume: resume,
+	}
+	dataJSON, err := json.Marshal(book)
+	helpers.ExitOnError("create new book", err)
+	js := string(dataJSON)
+
+	// insert new book
+	_, err = Esclient.Index().
+		Index("books").
+		BodyJson(js).
+		Do(Ctx)
+	helpers.ExitOnError("insert new book", err)
+	logrus.Info("New book inserted !")
+	return book
+}
+
+func ReadBook(id string) {
 	// Read book with specified ID
 	book, err := Esclient.Get().
 		Index("twitter").
@@ -83,7 +84,7 @@ func Read(id string) {
 	}
 }
 
-func Update(id string, name string, author string, resume string) {
+func UpdateBook(id string, name string, author string, resume string) {
 	// Update book with specified ID
 	_, err := Esclient.Update().
 		Index("books").
@@ -96,7 +97,7 @@ func Update(id string, name string, author string, resume string) {
 	logrus.Info("Book has been updated !")
 }
 
-func Delete(id string) {
+func DeleteBook(id string) {
 	// Delete book with specified ID
 	_, err := Esclient.Delete().
 		Index("books").
