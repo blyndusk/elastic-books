@@ -53,7 +53,7 @@ func SearchBook(query string, searchType string) models.Books {
 func CreateBook(name string, author string, resume string) models.Book {
 	// creating book object
 	book := models.Book{
-		Id: "",
+		Id:     "",
 		Name:   name,
 		Author: author,
 		Resume: resume,
@@ -73,7 +73,7 @@ func CreateBook(name string, author string, resume string) models.Book {
 	return book
 }
 
-func ReadBook(id string) *elastic.GetResult{
+func ReadBook(id string) *elastic.GetResult {
 	// Read book with specified ID
 	book, err := Esclient.Get().
 		Index("books").
@@ -87,7 +87,7 @@ func ReadBook(id string) *elastic.GetResult{
 	return book
 }
 
-func UpdateBook(id string, name string, author string, resume string) *elastic.UpdateResponse{
+func UpdateBook(id string, name string, author string, resume string) *elastic.UpdateResponse {
 	// Update book with specified ID
 	resp, err := Esclient.Update().
 		Index("books").
@@ -101,12 +101,13 @@ func UpdateBook(id string, name string, author string, resume string) *elastic.U
 	return resp
 }
 
-func DeleteBook(id string) {
+func DeleteBook(id string) *elastic.DeleteResponse {
 	// Delete book with specified ID
-	_, err := Esclient.Delete().
+	resp, err := Esclient.Delete().
 		Index("books").
 		Id(id).
 		Do(Ctx)
 	helpers.ExitOnError("Delete Book", err)
 	logrus.Info("Book has been deleted !")
+	return resp
 }

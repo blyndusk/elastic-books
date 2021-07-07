@@ -35,7 +35,7 @@ func ReadBook(c *gin.Context) {
 	response := es.ReadBook(id)
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "New book created",
+		"message": "Book",
 		"data":    response,
 	})
 }
@@ -48,7 +48,17 @@ func UpdateBook(c *gin.Context) {
 	response := es.UpdateBook(id, name, author, resume)
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "New book created",
+		"message": "Book updated",
+		"data":    response,
+	})
+}
+
+func DeleteBook(c *gin.Context) {
+	id := c.Params.ByName("id")
+	response := es.DeleteBook(id)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Book deleted",
 		"data":    response,
 	})
 }

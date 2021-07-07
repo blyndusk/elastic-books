@@ -24,14 +24,9 @@ func esRoutes(r *gin.Engine) {
 	r.POST("/books", server.CreateBook)
 
 	r.GET("/books/:id", server.ReadBook)
-	
+
 	r.PUT("/books/:id", server.UpdateBook)
 
-	r.DELETE("/books/:id", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"goal":   "[delete] a book by ID",
-			"status": "not implemented",
-		})
-	})
+	r.DELETE("/books/:id", server.DeleteBook)
 
 }
