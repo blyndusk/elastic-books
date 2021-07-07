@@ -1,4 +1,4 @@
-<h1 align="center">Repo Template</h1>
+<h1 align="center">elastic-books</h1>
 <p align="center">
     <a href="https://github.com/blyndusk/elastic-books/releases">
       <img src="https://img.shields.io/github/v/release/blyndusk/elastic-books"/>
@@ -29,25 +29,17 @@
     </a>
 </p>
 
-<p align="center">
-  <a href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/creating-a-repository-from-a-template">How to use this repo as a template for your project</a>
-</p>
+## I - Goal
 
-## I - Introduction
-
-The purpose of this repository is to provide a **solid**, **complete** and **adaptable** base of a [Golang](https://golang.org/)-oriented product in a **project-managed** repository, in order to start a new project with a **maximum time saving**.
+The goal of this project is to use the [Elastic search](https://www.elastic.co/) tool with a [Golang](https://golang.org/) API in order to be able to search for books by title, author or summary, using this API. The development environment is build with [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/), using a [Makefile](<https://en.wikipedia.org/wiki/Make_(software)>).
 
 This repository provides **commit writting** and **branch naming conventions**, **issues** and **pull request templates**, and a **custom issues labels preset**.
 
 But also **CI/CD** and **release** using [GitHub Actions](https://github.com/features/actions), [GitHub Container Registry](https://github.com/features/packages) and [Docker](https://www.docker.com/).
 
-And finally, a simple **RESTful API**, using [Golang](https://golang.org/), [Postgres](https://www.postgresql.org/) and [Adminer](https://www.adminer.org/), build with [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/), using a [Makefile](<https://en.wikipedia.org/wiki/Make_(software)>).
-
-> This repository gathers all the good practices that I have learned over time, both in terms of **organization** and **good maintenance** of a project over time as well as in terms of **automation, availability** and **consistancy**.<br/>This repository has a Golang RESTful API, but you can use whatever language you want, the **skeleton** of this repository will still be useful.
-
 ## II - Table of content
 
-- [I - Introduction](#i---introduction)
+- [I - Goal](#i---goal)
 - [II - Table of content](#ii---table-of-content)
 - [III - Conventions, templates and labels](#iii---conventions-templates-and-labels)
   - [A - Commit conventions](#a---commit-conventions)
@@ -59,7 +51,7 @@ And finally, a simple **RESTful API**, using [Golang](https://golang.org/), [Pos
   - [A - CI](#a---ci)
   - [B - CD](#b---cd)
   - [C - Release](#c---release)
-- [V - Golang RESTful API](#v---golang-restful-api)
+- [V - Elastic-books product](#v---elastic-books-product)
   - [A - Stack](#a---stack)
   - [B - Makefile](#b---makefile)
 - [VI - License](#vi---license)
@@ -146,7 +138,7 @@ It consist of:
 
 After that, you can check the release at `https://github.com/<username>/<repository-name>/releases`.
 
-## V - Golang RESTful API
+## V - Elastic-books product
 
 The project use **Docker** and **Docker Compose** to build and run local and distant images in our workspace.
 
@@ -154,29 +146,23 @@ The project use **Docker** and **Docker Compose** to build and run local and dis
 
 All the images use the **same network**, more informations at [docker-compose.yml](docker-compose.yml)
 
-| CONTAINER | PORT        | IMAGE                                                    |
-| :-------- | :---------- | :------------------------------------------------------- |
-| GOLANG    | `3333:3333` | [.docker/api/dev.Dockerfile](.docker/api/dev.Dockerfile) |
-| ADMINER   | `3334:8080` | [.docker/adminer/Dockerfile](.docker/adminer/Dockerfile) |
-| POSTGRES  | `5432:5432` | [postgres:latest](https://hub.docker.com/_/postgres)     |
-
-> Adminer is a GUI that allows us to **manage your database** by permetting to to **create, edit, delete** the different entities, tables, etc.
+| CONTAINER | PORT        | IMAGE                                                                                                        |
+| :-------- | :---------- | :----------------------------------------------------------------------------------------------------------- |
+| GOLANG    | `3333:3333` | [.docker/api/dev.Dockerfile](.docker/api/dev.Dockerfile)                                                     |
+| ELASTIC   | `9200:9200` | [docker.elastic.co/elasticsearch/elasticsearch:7.13.2](docker.elastic.co/elasticsearch/elasticsearch:7.13.2) |
+| KIBANA    | `5601:5601` | [docker.elastic.co/kibana/kibana:7.13.2](docker.elastic.co/kibana/kibana:7.13.2)                             |
 
 ### B - Makefile
 
 #### TL;DR <!-- omit in toc -->
 
 ```bash
-make setup-env start logs
+make lint start logs
 ```
 
 #### `make help` <!-- omit in toc -->
 
 **Display** informations about other commands.
-
-#### `make setup-env` <!-- omit in toc -->
-
-**Copy** the sample environment files.
 
 #### `make start` <!-- omit in toc -->
 
@@ -196,4 +182,4 @@ Up the containers with **full cache reset** to avoid cache errors.
 
 ## VI - License
 
-Under [MIT](./LICENSE) license. 
+Under [MIT](./LICENSE) license.
