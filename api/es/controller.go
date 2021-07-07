@@ -68,6 +68,7 @@ func Read(esclient *elastic.Client, Query string, SearchType string) {
 		logrus.Info(fmt.Sprintf("Book found: \nName: %s\nAuthor: %s\nResume: %s \n", s.Name, s.Author, s.Resume))
 	}
 }
+<<<<<<< HEAD:api/es/controller.go
 
 // func Update(esclient elastic.Client, Id string, Name string, Author string, Resume string) {
 // 	// Update book with specified ID
@@ -98,3 +99,5 @@ func Delete(esclient *elastic.Client, Id string) {
 	helpers.ExitOnError("Delete Book", err)
 	logrus.Info("Book has been deleted !")
 }
+=======
+>>>>>>> add(router): #3 - router init:api/es/search.go
