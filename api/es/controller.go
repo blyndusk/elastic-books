@@ -13,7 +13,7 @@ import (
 
 var Ctx = context.Background()
 
-func Create(esclient *elastic.Client, Name string, Author string, Resume string) {
+func Create(Name string, Author string, Resume string) {
 	// creating book object
 	newBook := models.Book{
 		Name:   Name,
@@ -25,7 +25,7 @@ func Create(esclient *elastic.Client, Name string, Author string, Resume string)
 	js := string(dataJSON)
 
 	// insert new book
-	_, err = esclient.Index().
+	_, err = Esclient.Index().
 		Index("books").
 		BodyJson(js).
 		Do(Ctx)
@@ -33,7 +33,7 @@ func Create(esclient *elastic.Client, Name string, Author string, Resume string)
 	logrus.Info("New book inserted !")
 }
 
-func Read(esclient *elastic.Client, Query string, SearchType string) {
+func Read(Query string, SearchType string) {
 	var books models.Books
 
 	// init search source
@@ -50,7 +50,7 @@ func Read(esclient *elastic.Client, Query string, SearchType string) {
 	logrus.Info("Final ESQuery ", string(queryJs))
 
 	// init search service
-	searchService := esclient.Search().Index("books").SearchSource(searchSource)
+	searchService := Esclient.Search().Index("books").SearchSource(searchSource)
 
 	searchResult, err := searchService.Do(Ctx)
 	helpers.ExitOnError("get search query", err)
@@ -69,9 +69,9 @@ func Read(esclient *elastic.Client, Query string, SearchType string) {
 	}
 }
 
-func Update(esclient elastic.Client, Id string, Name string, Author string, Resume string) {
+func Update(Id string, Name string, Author string, Resume string) {
 	// Update book with specified ID
-	_, err := esclient.Update().
+	_, err := Esclient.Update().
 		Index("books").
 		Id(Id).
 		Doc(map[string]interface{}{"name": Name, "author": Author, "resume": Resume}).
@@ -82,9 +82,9 @@ func Update(esclient elastic.Client, Id string, Name string, Author string, Resu
 	logrus.Info("Book has been updated !")
 }
 
-func Delete(esclient *elastic.Client, Id string) {
+func Delete(Id string) {
 	// Delete book with specified ID
-	_, err := esclient.Delete().
+	_, err := Esclient.Delete().
 		Index("books").
 		Id(Id).
 		Do(Ctx)
