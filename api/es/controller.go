@@ -53,6 +53,7 @@ func SearchBook(query string, searchType string) models.Books {
 func CreateBook(name string, author string, resume string) models.Book {
 	// creating book object
 	book := models.Book{
+		Id: "",
 		Name:   name,
 		Author: author,
 		Resume: resume,
@@ -62,10 +63,11 @@ func CreateBook(name string, author string, resume string) models.Book {
 	js := string(dataJSON)
 
 	// insert new book
-	_, err = Esclient.Index().
+	resp, err := Esclient.Index().
 		Index("books").
 		BodyJson(js).
 		Do(Ctx)
+	book.Id = resp.Id
 	helpers.ExitOnError("insert new book", err)
 	logrus.Info("New book inserted !")
 	return book
@@ -84,9 +86,9 @@ func ReadBook(id string) {
 	}
 }
 
-func UpdateBook(id string, name string, author string, resume string) {
+func UpdateBook(id string, name string, author string, resume string) *elastic.UpdateResponse{
 	// Update book with specified ID
-	_, err := Esclient.Update().
+	resp, err := Esclient.Update().
 		Index("books").
 		Id(id).
 		Doc(map[string]interface{}{"name": name, "author": author, "resume": resume}).
@@ -95,6 +97,7 @@ func UpdateBook(id string, name string, author string, resume string) {
 
 	helpers.ExitOnError("Update Book", err)
 	logrus.Info("Book has been updated !")
+	return resp
 }
 
 func DeleteBook(id string) {

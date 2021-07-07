@@ -29,3 +29,17 @@ func CreateBook(c *gin.Context) {
 		"data":    data,
 	})
 }
+
+
+func UpdateBook(c *gin.Context) {
+	id := c.Params.ByName("id")
+	name := c.Query("name")
+	author := c.Query("author")
+	resume := c.Query("resume")
+	response := es.UpdateBook(id, name, author, resume)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "New book created",
+		"data":    response,
+	})
+}
