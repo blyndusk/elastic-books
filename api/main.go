@@ -5,5 +5,8 @@ import (
 )
 
 func main() {
-	es.Search()
+	// init es client
+	ctx := context.Background()
+	esclient, err := es.InitClient()
+	helpers.ExitOnError("client init", err)
 }

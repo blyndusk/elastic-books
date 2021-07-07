@@ -11,35 +11,33 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func Search() {
-	// init es client
-	ctx := context.Background()
-	esclient, err := InitClient()
-	helpers.ExitOnError("client init", err)
-
+func Create(elastic.Client esclient, string Name, string Author, string Resume) {
 	// creating book object
 	newBook := models.Book{
-		Name:   "Martine veut dissoudre l'Assemblée Nationale, feat Jean Castête ",
-		Author: "Jeanne Oskour",
-		Resume: "C'est l'histoire de Martine qui veut dissoudre l'Assemblée Nationale, accompagnée de son fidèle écuyer, Jean Castête. Un fabuleux livre pour petits et grands, de Jeanne Oskhour",
+		Name:   Name,
+		Author: Author,
+		Resume: Resume,
 	}
 	dataJSON, err := json.Marshal(newBook)
 	helpers.ExitOnError("create new book", err)
 	js := string(dataJSON)
 
 	// insert new book
+	ctx := context.Background()
 	_, err = esclient.Index().
 		Index("books").
 		BodyJson(js).
 		Do(ctx)
 	helpers.ExitOnError("insert new book", err)
 	logrus.Info("New book inserted !")
+}
 
+func Read(elastic.Client esclient, string Query, string SearchType) {
 	var books models.Books
 
 	// init search source
 	searchSource := elastic.NewSearchSource()
-	searchSource.Query(elastic.NewMatchQuery("name", "Jean"))
+	searchSource.Query(elastic.NewMatchQuery(SearchType, Query))
 
 	// search query
 	queryStr, err1 := searchSource.Source()
@@ -69,3 +67,37 @@ func Search() {
 		logrus.Info(fmt.Sprintf("Book found: \nName: %s\nAuthor: %s\nResume: %s \n", s.Name, s.Author, s.Resume))
 	}
 }
+
+func Update(elastic.Client esclient, int Id, string Name, string Author, string Resume) {
+	// Update book with specified ID
+	newBook := models.Book{
+		Name:   Name,
+		Author: Author,
+		Resume: Resume,
+	}
+	dataJSON, err := json.Marshal(newBook)
+	helpers.ExitOnError("create new book", err)
+	js := string(dataJSON)
+
+	ctx := context.Background()
+	_, err := client.Update().
+		Index("books").
+		Id(Id).
+		BodyJson(js).
+		Do(ctx)
+	helpers.ExitOnError("Update Book", err)
+	logrus.Info("Book has been updated !")
+}
+
+func Delete(elastic.Client esclient, int Id) {
+	// Delete book with specified ID
+	ctx := context.Background()
+	_, err := esclient.Delete().
+		Index("books").
+		Id(Id).
+		BodyJson(js).
+		Do(ctx)
+	helpers.ExitOnError("Delete Book", err)
+	logrus.Info("Book has been deleted !")
+}
+
