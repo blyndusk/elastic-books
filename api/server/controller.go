@@ -9,12 +9,12 @@ import (
 
 func SearchBook(c *gin.Context) {
 
-		query := c.Query("query")
-		searchType := c.Query("type")
-		result := es.Search(query, searchType)
+	query := c.Query("query")
+	searchType := c.Query("type")
+	result := es.Search(query, searchType)
 
-		c.JSON(http.StatusOK, gin.H{
-			"message": es.Esclient.String(),
-			"result": result,
-		})
-	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": es.Esclient.String(),
+		"result":  result,
+	})
+}

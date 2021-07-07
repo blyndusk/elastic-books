@@ -33,7 +33,7 @@ func Create(Name string, Author string, Resume string) {
 	logrus.Info("New book inserted !")
 }
 
-func Search(Query string, SearchType string) (models.Books) {
+func Search(Query string, SearchType string) models.Books {
 	var books models.Books
 
 	// init search source
@@ -63,7 +63,7 @@ func Search(Query string, SearchType string) (models.Books) {
 		books = append(books, book)
 	}
 	helpers.ExitOnError("Fetching book fail", err)
-logrus.Info(books)
+	logrus.Info(books)
 	for _, s := range books {
 		logrus.Info(fmt.Sprintf("Book found: \nName: %s\nAuthor: %s\nResume: %s \n", s.Name, s.Author, s.Resume))
 	}
