@@ -12,21 +12,21 @@ var Esclient *elastic.Client
 
 const mapping = `{
 	"settings": {
-	  	"number_of_shards": 1,
-	  	"number_of_replicas": 1
+		"number_of_shards": 1,
+		"number_of_replicas": 1
 	},
 	"mappings": {
-	  	"properties": {
+		"properties": {
 			"name": {
-		 		"type": "text"
+				"type": "text"
 			},
 			"author": {
-		  		"type": "text"
+				"type": "text"
 			},
 			"resume": {
-		  		"type": "text"
+				"type": "text"
 			}
-	  	}
+		}
 	}
 }`
 
