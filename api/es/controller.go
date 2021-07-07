@@ -73,10 +73,10 @@ func CreateBook(name string, author string, resume string) models.Book {
 	return book
 }
 
-func ReadBook(id string) {
+func ReadBook(id string) *elastic.GetResult{
 	// Read book with specified ID
 	book, err := Esclient.Get().
-		Index("twitter").
+		Index("books").
 		Id(id).
 		Do(Ctx)
 
@@ -84,6 +84,7 @@ func ReadBook(id string) {
 	if book.Found {
 		logrus.Info("Book found: \n %s", book.Fields)
 	}
+	return book
 }
 
 func UpdateBook(id string, name string, author string, resume string) *elastic.UpdateResponse{

@@ -30,6 +30,15 @@ func CreateBook(c *gin.Context) {
 	})
 }
 
+func ReadBook(c *gin.Context) {
+	id := c.Params.ByName("id")
+	response := es.ReadBook(id)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "New book created",
+		"data":    response,
+	})
+}
 
 func UpdateBook(c *gin.Context) {
 	id := c.Params.ByName("id")
