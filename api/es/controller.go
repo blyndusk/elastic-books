@@ -13,7 +13,7 @@ import (
 
 var Ctx = context.Background()
 
-func Create(esclient elastic.Client, Name string, Author string, Resume string) {
+func Create(esclient *elastic.Client, Name string, Author string, Resume string) {
 	// creating book object
 	newBook := models.Book{
 		Name:   Name,
@@ -33,7 +33,7 @@ func Create(esclient elastic.Client, Name string, Author string, Resume string) 
 	logrus.Info("New book inserted !")
 }
 
-func Read(esclient elastic.Client, Query string, SearchType string) {
+func Read(esclient *elastic.Client, Query string, SearchType string) {
 	var books models.Books
 
 	// init search source
@@ -89,7 +89,7 @@ func Read(esclient elastic.Client, Query string, SearchType string) {
 // 	logrus.Info("Book has been updated !")
 //}
 
-func Delete(esclient elastic.Client, Id string) {
+func Delete(esclient *elastic.Client, Id string) {
 	// Delete book with specified ID
 	_, err := esclient.Delete().
 		Index("books").
