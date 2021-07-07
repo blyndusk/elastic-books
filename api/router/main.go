@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/blyndusk/elastic-books/api/controllers"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,12 +26,7 @@ func esRoutes(r *gin.Engine) {
 		})
 	})
 
-	r.POST("/books/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"goal":   "[create] a book by ID",
-			"status": "not implemented",
-		})
-	})
+	r.GET("/books/", controllers.CreateBook)
 
 	r.PUT("/books/:id", func(c *gin.Context) {
 		c.JSON(200, gin.H{

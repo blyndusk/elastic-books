@@ -8,6 +8,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var Esclient *elastic.Client
+
 const mapping = `{
 	"settings": {
 	  	"number_of_shards": 1,
@@ -28,8 +30,8 @@ const mapping = `{
 	}
 }`
 
-func InitClient() (*elastic.Client, error) {
-	client, err := elastic.NewClient(elastic.SetURL("http://es01:9200"),
+func InitClient() {
+	esclient, err := elastic.NewClient(elastic.SetURL("http://es01:9200"),
 		elastic.SetSniff(false),
 		elastic.SetHealthcheck(false))
 	helpers.ExitOnError("new client", err)
@@ -38,18 +40,18 @@ func InitClient() (*elastic.Client, error) {
 	ctx := context.Background()
 
 	// Check if "books" index exists
-	exists, err := client.IndexExists("books").Do(ctx)
+	exists, err := esclient.IndexExists("books").Do(ctx)
 	helpers.ExitOnError("index exist", err)
 
 	if !exists {
 		// Create a new index.
-		createIndex, err := client.CreateIndex("books").BodyString(mapping).Do(ctx)
+		createIndex, err := esclient.CreateIndex("books").BodyString(mapping).Do(ctx)
 		helpers.ExitOnError("create index", err)
 
 		if !createIndex.Acknowledged {
 			logrus.Info("Something went wrong :/ The \"books\" index wasn't created.")
 		}
 	}
+	Esclient = esclient
 
-	return client, err
 }
