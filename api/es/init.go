@@ -2,6 +2,8 @@ package es
 
 import (
 	"context"
+
+	"github.com/blyndusk/elastic-books/api/helpers"
 	elastic "github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
 )
@@ -30,24 +32,20 @@ func InitClient() (*elastic.Client, error) {
 	client, err := elastic.NewClient(elastic.SetURL("http://es01:9200"),
 		elastic.SetSniff(false),
 		elastic.SetHealthcheck(false))
-
+	helpers.ExitOnError("new client", err)
 	logrus.Info("ES initialized !")
 
 	ctx := context.Background()
 
 	// Check if "books" index exists
 	exists, err := client.IndexExists("books").Do(ctx)
-	if err != nil {
-		// Handle error
-		panic(err)
-	}
+	helpers.ExitOnError("index exist", err)
+
 	if !exists {
 		// Create a new index.
 		createIndex, err := client.CreateIndex("books").BodyString(mapping).Do(ctx)
-		if err != nil {
-			// Handle error
-			panic(err)
-		}
+		helpers.ExitOnError("create index", err)
+
 		if !createIndex.Acknowledged {
 			logrus.Info("Something went wrong :/ The \"books\" index wasn't created.")
 		}
