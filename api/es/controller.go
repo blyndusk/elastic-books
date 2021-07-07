@@ -13,12 +13,12 @@ import (
 
 var Ctx = context.Background()
 
-func Create(Name string, Author string, Resume string) {
+func Create(name string, author string, resume string) {
 	// creating book object
 	newBook := models.Book{
-		Name:   Name,
-		Author: Author,
-		Resume: Resume,
+		Name:   name,
+		Author: author,
+		Resume: resume,
 	}
 	dataJSON, err := json.Marshal(newBook)
 	helpers.ExitOnError("create new book", err)
@@ -33,12 +33,12 @@ func Create(Name string, Author string, Resume string) {
 	logrus.Info("New book inserted !")
 }
 
-func Search(Query string, SearchType string) models.Books {
+func Search(query string, searchType string) models.Books {
 	var books models.Books
 
 	// init search source
 	searchSource := elastic.NewSearchSource()
-	searchSource.Query(elastic.NewMatchQuery(SearchType, Query))
+	searchSource.Query(elastic.NewMatchQuery(searchType, query))
 
 	// search query
 	queryStr, err1 := searchSource.Source()
@@ -70,12 +70,25 @@ func Search(Query string, SearchType string) models.Books {
 	return books
 }
 
-func Update(Id string, Name string, Author string, Resume string) {
+func Read(id string) {
+	// Read book with specified ID
+	book, err := Esclient.Get().
+		Index("twitter").
+		Id(id).
+		Do(Ctx)
+
+	helpers.ExitOnError("Read Book", err)
+	if book.Found {
+		logrus.Info("Book found: \n %s", book.Fields)
+	}
+}
+
+func Update(id string, name string, author string, resume string) {
 	// Update book with specified ID
 	_, err := Esclient.Update().
 		Index("books").
-		Id(Id).
-		Doc(map[string]interface{}{"name": Name, "author": Author, "resume": Resume}).
+		Id(id).
+		Doc(map[string]interface{}{"name": name, "author": author, "resume": resume}).
 		DetectNoop(true).
 		Do(Ctx)
 
@@ -83,11 +96,11 @@ func Update(Id string, Name string, Author string, Resume string) {
 	logrus.Info("Book has been updated !")
 }
 
-func Delete(Id string) {
+func Delete(id string) {
 	// Delete book with specified ID
 	_, err := Esclient.Delete().
 		Index("books").
-		Id(Id).
+		Id(id).
 		Do(Ctx)
 	helpers.ExitOnError("Delete Book", err)
 	logrus.Info("Book has been deleted !")
