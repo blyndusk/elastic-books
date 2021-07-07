@@ -69,25 +69,18 @@ func Read(esclient elastic.Client, Query string, SearchType string) {
 	}
 }
 
-// func Update(esclient elastic.Client, Id string, Name string, Author string, Resume string) {
-// 	// Update book with specified ID
-// 	newBook := models.Book{
-// 		Name:   Name,
-// 		Author: Author,
-// 		Resume: Resume,
-// 	}
-// 	dataJSON, err := json.Marshal(newBook)
-// 	helpers.ExitOnError("create new book", err)
-// 	js := string(dataJSON)
+func Update(esclient elastic.Client, Id string, Name string, Author string, Resume string) {
+	// Update book with specified ID
+	_, err := esclient.Update().
+		Index("books").
+		Id(Id).
+		Doc(map[string]interface{}{"name": Name, "author": Author, "resume": Resume}).
+		DetectNoop(true).
+		Do(Ctx)
 
-// 	_, err = esclient.Update().
-// 		Index("books").
-// 		Id(Id).
-// 		BodyJson(js).
-// 		Do(Ctx)
-// 	helpers.ExitOnError("Update Book", err)
-// 	logrus.Info("Book has been updated !")
-//}
+	helpers.ExitOnError("Update Book", err)
+	logrus.Info("Book has been updated !")
+}
 
 func Delete(esclient elastic.Client, Id string) {
 	// Delete book with specified ID
