@@ -3,7 +3,6 @@ package es
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/blyndusk/elastic-books/api/helpers"
 	"github.com/blyndusk/elastic-books/api/models"
@@ -14,40 +13,29 @@ import (
 var Ctx = context.Background()
 
 func SearchBook(query string, searchType string) models.Books {
-	var books models.Books
+	var foundBooks models.Books
 
-	// init search source
+	// init search source with query
 	searchSource := elastic.NewSearchSource()
 	searchSource.Query(elastic.NewMatchQuery(searchType, query))
-
-	// search query
-	queryStr, err1 := searchSource.Source()
-	queryJs, err2 := json.Marshal(queryStr)
-
-	if err1 != nil || err2 != nil {
-		logrus.Fatal("query", err1, err2)
-	}
-	logrus.Info("Final ESQuery ", string(queryJs))
 
 	// init search service
 	searchService := Esclient.Search().Index("books").SearchSource(searchSource)
 
+	// get result with context
 	searchResult, err := searchService.Do(Ctx)
 	helpers.ExitOnError("get search query", err)
 
-	// searching
+	// parsing result
 	for _, hit := range searchResult.Hits.Hits {
 		var book models.Book
+		// fill result JSON
 		err := json.Unmarshal(hit.Source, &book)
 		helpers.ExitOnError("getting books", err)
-		books = append(books, book)
+		foundBooks = append(foundBooks, book)
 	}
-	helpers.ExitOnError("Fetching book fail", err)
-	logrus.Info(books)
-	for _, s := range books {
-		logrus.Info(fmt.Sprintf("Book found: \nName: %s\nAuthor: %s\nResume: %s \n", s.Name, s.Author, s.Resume))
-	}
-	return books
+
+	return foundBooks
 }
 
 func CreateBook(name string, author string, resume string) models.Book {

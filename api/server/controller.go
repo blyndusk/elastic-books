@@ -8,14 +8,24 @@ import (
 )
 
 func SearchBook(c *gin.Context) {
+	// get params
 	query := c.Query("query")
 	searchType := c.Query("type")
-	data := es.SearchBook(query, searchType)
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Here is your search results",
-		"data":    data,
-	})
+	// get result
+	foundBooks := es.SearchBook(query, searchType)
+
+	// handle no result
+	if foundBooks != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Here is your search results",
+			"data":    foundBooks,
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "No result found. Try differents queries or types.",
+		})
+	}
 }
 
 func CreateBook(c *gin.Context) {
