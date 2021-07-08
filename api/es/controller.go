@@ -7,7 +7,6 @@ import (
 	"github.com/blyndusk/elastic-books/api/helpers"
 	"github.com/blyndusk/elastic-books/api/models"
 	elastic "github.com/olivere/elastic/v7"
-	"github.com/sirupsen/logrus"
 )
 
 var Ctx = context.Background()
@@ -28,11 +27,12 @@ func SearchBook(query string, searchType string) models.Books {
 
 	// parsing result
 	for _, hit := range searchResult.Hits.Hits {
-		var book models.Book
+		var foundBook models.Book
 		// fill result JSON
-		err := json.Unmarshal(hit.Source, &book)
+		err := json.Unmarshal(hit.Source, &foundBook)
 		helpers.ExitOnError("stringify source", err)
-		foundBooks = append(foundBooks, book)
+		foundBook.Id = hit.Id
+		foundBooks = append(foundBooks, foundBook)
 	}
 
 	return foundBooks
@@ -58,18 +58,22 @@ func CreateBook(bookToCreate models.Book) models.Book {
 	return createdBook
 }
 
-func ReadBook(id string) *elastic.GetResult {
+func ReadBook(bookToRead models.Book) (models.Book, error) {
 	// Read book with specified ID
-	book, err := Esclient.Get().
+	resp, err := Esclient.Get().
 		Index("books").
-		Id(id).
+		Id(bookToRead.Id).
 		Do(Ctx)
 
-	helpers.ExitOnError("Read Book", err)
-	if book.Found {
-		logrus.Info("Book found: \n %s", book.Fields)
+	if err != nil {
+		return bookToRead, err
+	} else {
+		readedBook := bookToRead
+		err = json.Unmarshal(resp.Source, &readedBook)
+		helpers.ExitOnError("stringify source", err)
+
+		return readedBook, err
 	}
-	return book
 }
 
 func UpdateBook(bookToUpdate models.Book) (models.Book, error) {
@@ -100,13 +104,12 @@ func UpdateBook(bookToUpdate models.Book) (models.Book, error) {
 	}
 }
 
-func DeleteBook(id string) *elastic.DeleteResponse {
+func DeleteBook(id string) error {
 	// Delete book with specified ID
-	resp, err := Esclient.Delete().
+	_, err := Esclient.Delete().
 		Index("books").
 		Id(id).
 		Do(Ctx)
-	helpers.ExitOnError("Delete Book", err)
-	logrus.Info("Book has been deleted !")
-	return resp
+
+	return err
 }

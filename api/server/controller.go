@@ -49,13 +49,28 @@ func CreateBook(c *gin.Context) {
 }
 
 func ReadBook(c *gin.Context) {
-	id := c.Params.ByName("id")
-	response := es.ReadBook(id)
+	// get params
+	bookToRead := models.Book{
+		Id:     c.Params.ByName("id"),
+		Name:   "",
+		Author: "",
+		Resume: "",
+	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Book",
-		"data":    response,
-	})
+	// get book from es
+	readedBook, err := es.ReadBook(bookToRead)
+
+	// handle inexisting book
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"_message": fmt.Sprintf("Book [%s] doesn't exist. Please use a valid ID.", readedBook.Id),
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"_message": fmt.Sprintf("Book [%s]", readedBook.Id),
+			"data":     readedBook,
+		})
+	}
 }
 
 func UpdateBook(c *gin.Context) {
@@ -84,11 +99,17 @@ func UpdateBook(c *gin.Context) {
 }
 
 func DeleteBook(c *gin.Context) {
-	id := c.Params.ByName("id")
-	response := es.DeleteBook(id)
+	// get params
+	err := es.DeleteBook(c.Params.ByName("id"))
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Book deleted",
-		"data":    response,
-	})
+	// handle inexisting book
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"_message": fmt.Sprintf("Book [%s] doesn't exist. Please use a valid ID.", c.Params.ByName("id")),
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"_message": fmt.Sprintf("Book [%s] deleted successfully.", c.Params.ByName("id")),
+		})
+	}
 }
