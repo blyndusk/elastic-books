@@ -1,9 +1,11 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/blyndusk/elastic-books/api/es"
+	"github.com/blyndusk/elastic-books/api/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,25 +20,31 @@ func SearchBook(c *gin.Context) {
 	// handle no result
 	if foundBooks != nil {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "Here is your search results",
-			"data":    foundBooks,
+			"_message": "Here is your search results",
+			"data":     foundBooks,
 		})
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "No result found. Try differents queries or types.",
+			"_message": "No result found. Try differents queries or types.",
 		})
 	}
 }
 
 func CreateBook(c *gin.Context) {
-	name := c.Query("name")
-	author := c.Query("author")
-	resume := c.Query("resume")
-	data := es.CreateBook(name, author, resume)
+	// get params
+	bookToCreate := models.Book{
+		Id:     "",
+		Name:   c.Query("name"),
+		Author: c.Query("author"),
+		Resume: c.Query("resume"),
+	}
+
+	// get created book from es
+	createdBook := es.CreateBook(bookToCreate)
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "New book created",
-		"data":    data,
+		"_message": fmt.Sprintf("Book created [%s]", createdBook.Id),
+		"data":     createdBook,
 	})
 }
 
@@ -51,16 +59,28 @@ func ReadBook(c *gin.Context) {
 }
 
 func UpdateBook(c *gin.Context) {
-	id := c.Params.ByName("id")
-	name := c.Query("name")
-	author := c.Query("author")
-	resume := c.Query("resume")
-	response := es.UpdateBook(id, name, author, resume)
+	// get params
+	bookToUpdate := models.Book{
+		Id:     c.Params.ByName("id"),
+		Name:   c.Query("name"),
+		Author: c.Query("author"),
+		Resume: c.Query("resume"),
+	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Book updated",
-		"data":    response,
-	})
+	// get updated book from es
+	updatedBook, err := es.UpdateBook(bookToUpdate)
+
+	// handle inexisting book
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"_message": fmt.Sprintf("Book [%s] doesn't exist. Please use a valid ID.", updatedBook.Id),
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"_message": fmt.Sprintf("Book updated [%s]", updatedBook.Id),
+			"data":     updatedBook,
+		})
+	}
 }
 
 func DeleteBook(c *gin.Context) {
