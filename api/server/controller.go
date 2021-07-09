@@ -56,7 +56,7 @@ func ReadBook(c *gin.Context) {
 
 	readedBook, err := es.ReadBook(bookToRead)
 
-	// handle unvalid ID
+	// handle invalid ID
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"_message": fmt.Sprintf("Book [%s] doesn't exist. Please use a valid ID.", readedBook.Id),
@@ -79,7 +79,7 @@ func UpdateBook(c *gin.Context) {
 
 	updatedBook, err := es.UpdateBook(bookToUpdate)
 
-	// handle unvalid ID
+	// handle invalid ID
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"_message": fmt.Sprintf("Book [%s] doesn't exist. Please use a valid ID.", updatedBook.Id),
@@ -95,7 +95,7 @@ func UpdateBook(c *gin.Context) {
 func DeleteBook(c *gin.Context) {
 	err := es.DeleteBook(c.Params.ByName("id"))
 
-	// handle unvalid ID
+	// handle invalid ID
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"_message": fmt.Sprintf("Book [%s] doesn't exist. Please use a valid ID.", c.Params.ByName("id")),
