@@ -18,7 +18,6 @@ func Setup() {
 }
 
 func esRoutes(r *gin.Engine) {
-
 	r.POST("/books/search", server.SearchBook)
 
 	r.POST("/books", server.CreateBook)
@@ -28,5 +27,4 @@ func esRoutes(r *gin.Engine) {
 	r.PUT("/books/:id", server.UpdateBook)
 
 	r.DELETE("/books/:id", server.DeleteBook)
-
 }
