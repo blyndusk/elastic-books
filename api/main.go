@@ -7,9 +7,7 @@ import (
 )
 
 func main() {
-	// init elastic search client
 	es.InitClient()
-	// setup router
 	router.Setup()
 
 	logrus.Info("Thanks for using elastic-books !")

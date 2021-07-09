@@ -10,14 +10,14 @@ import (
 )
 
 func SearchBook(c *gin.Context) {
-	// get params
+	// get request params
 	query := c.Query("query")
 	searchType := c.Query("type")
 
 	// get result
 	foundBooks := es.SearchBook(query, searchType)
 
-	// handle no result
+	// handle no result from the search
 	if foundBooks != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"_message": "Here is your search results",
@@ -31,7 +31,6 @@ func SearchBook(c *gin.Context) {
 }
 
 func CreateBook(c *gin.Context) {
-	// get params
 	bookToCreate := models.Book{
 		Id:     "",
 		Name:   c.Query("name"),
@@ -39,7 +38,6 @@ func CreateBook(c *gin.Context) {
 		Resume: c.Query("resume"),
 	}
 
-	// get created book from es
 	createdBook := es.CreateBook(bookToCreate)
 
 	c.JSON(http.StatusOK, gin.H{
@@ -49,7 +47,6 @@ func CreateBook(c *gin.Context) {
 }
 
 func ReadBook(c *gin.Context) {
-	// get params
 	bookToRead := models.Book{
 		Id:     c.Params.ByName("id"),
 		Name:   "",
@@ -57,10 +54,9 @@ func ReadBook(c *gin.Context) {
 		Resume: "",
 	}
 
-	// get book from es
 	readedBook, err := es.ReadBook(bookToRead)
 
-	// handle inexisting book
+	// handle unvalid ID
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"_message": fmt.Sprintf("Book [%s] doesn't exist. Please use a valid ID.", readedBook.Id),
@@ -74,7 +70,6 @@ func ReadBook(c *gin.Context) {
 }
 
 func UpdateBook(c *gin.Context) {
-	// get params
 	bookToUpdate := models.Book{
 		Id:     c.Params.ByName("id"),
 		Name:   c.Query("name"),
@@ -82,10 +77,9 @@ func UpdateBook(c *gin.Context) {
 		Resume: c.Query("resume"),
 	}
 
-	// get updated book from es
 	updatedBook, err := es.UpdateBook(bookToUpdate)
 
-	// handle inexisting book
+	// handle unvalid ID
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"_message": fmt.Sprintf("Book [%s] doesn't exist. Please use a valid ID.", updatedBook.Id),
@@ -99,10 +93,9 @@ func UpdateBook(c *gin.Context) {
 }
 
 func DeleteBook(c *gin.Context) {
-	// get params
 	err := es.DeleteBook(c.Params.ByName("id"))
 
-	// handle inexisting book
+	// handle unvalid ID
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"_message": fmt.Sprintf("Book [%s] doesn't exist. Please use a valid ID.", c.Params.ByName("id")),

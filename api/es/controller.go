@@ -51,7 +51,6 @@ func CreateBook(bookToCreate models.Book) models.Book {
 		Do(ctx)
 	helpers.ExitOnError("insert new book - ", err)
 
-	// get created book + add id
 	createdBook := bookToCreate
 	createdBook.Id = resp.Id
 
@@ -59,13 +58,13 @@ func CreateBook(bookToCreate models.Book) models.Book {
 }
 
 func ReadBook(bookToRead models.Book) (models.Book, error) {
-	// Read book with specified ID
 	resp, err := Esclient.Get().
 		Index("books").
 		Id(bookToRead.Id).
 		Do(ctx)
 
 	if err != nil {
+		// return not found in server/controller.go
 		return bookToRead, err
 	} else {
 		readedBook := bookToRead
@@ -77,7 +76,6 @@ func ReadBook(bookToRead models.Book) (models.Book, error) {
 }
 
 func UpdateBook(bookToUpdate models.Book) (models.Book, error) {
-	// extract data
 	doc := map[string]interface{}{
 		"name":   bookToUpdate.Name,
 		"author": bookToUpdate.Author,
@@ -92,11 +90,9 @@ func UpdateBook(bookToUpdate models.Book) (models.Book, error) {
 		DetectNoop(true).
 		Do(ctx)
 
-	// if err (not found), return with book param + err
 	if err != nil {
 		return bookToUpdate, err
 	} else {
-		// get updated book + add id
 		updatedBook := bookToUpdate
 		updatedBook.Id = resp.Id
 
@@ -105,7 +101,6 @@ func UpdateBook(bookToUpdate models.Book) (models.Book, error) {
 }
 
 func DeleteBook(id string) error {
-	// Delete book with specified ID
 	_, err := Esclient.Delete().
 		Index("books").
 		Id(id).
