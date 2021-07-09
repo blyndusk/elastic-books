@@ -142,6 +142,8 @@ After that, you can check the release at `https://github.com/<username>/<reposit
 
 The project use **Docker** and **Docker Compose** to build and run local and distant images in our workspace.
 
+> For more informations, check the [wiki](https://github.com/blyndusk/elastic-books/wiki).
+
 ### A - Stack
 
 All the images use the **same network**, more informations at [docker-compose.yml](docker-compose.yml)
@@ -159,6 +161,8 @@ All the images use the **same network**, more informations at [docker-compose.ym
 ```bash
 make lint start logs
 ```
+
+> You will have errors at 1st build, because the Golang API is ready before the ES service. Just `Ctrl + S` on a Golang file will fix the problem (hot-reload)
 
 #### `make help` <!-- omit in toc -->
 
