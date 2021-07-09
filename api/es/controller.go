@@ -9,7 +9,7 @@ import (
 	elastic "github.com/olivere/elastic/v7"
 )
 
-var Ctx = context.Background()
+var ctx = context.Background()
 
 func SearchBook(query string, searchType string) models.Books {
 	var foundBooks models.Books
@@ -22,15 +22,15 @@ func SearchBook(query string, searchType string) models.Books {
 	searchService := Esclient.Search().Index("books").SearchSource(searchSource)
 
 	// get result with context
-	searchResult, err := searchService.Do(Ctx)
-	helpers.ExitOnError("get search query", err)
+	searchResult, err := searchService.Do(ctx)
+	helpers.ExitOnError("get search query - ", err)
 
 	// parsing result
 	for _, hit := range searchResult.Hits.Hits {
 		var foundBook models.Book
 		// fill result JSON
 		err := json.Unmarshal(hit.Source, &foundBook)
-		helpers.ExitOnError("stringify source", err)
+		helpers.ExitOnError("stringify source - ", err)
 		foundBook.Id = hit.Id
 		foundBooks = append(foundBooks, foundBook)
 	}
@@ -41,15 +41,15 @@ func SearchBook(query string, searchType string) models.Books {
 func CreateBook(bookToCreate models.Book) models.Book {
 	// extract data
 	data, err := json.Marshal(bookToCreate)
-	helpers.ExitOnError("parsing book ", err)
+	helpers.ExitOnError("parsing book - ", err)
 	js := string(data)
 
 	// insert new book in index
 	resp, err := Esclient.Index().
 		Index("books").
 		BodyJson(js).
-		Do(Ctx)
-	helpers.ExitOnError("insert new book", err)
+		Do(ctx)
+	helpers.ExitOnError("insert new book - ", err)
 
 	// get created book + add id
 	createdBook := bookToCreate
@@ -63,14 +63,14 @@ func ReadBook(bookToRead models.Book) (models.Book, error) {
 	resp, err := Esclient.Get().
 		Index("books").
 		Id(bookToRead.Id).
-		Do(Ctx)
+		Do(ctx)
 
 	if err != nil {
 		return bookToRead, err
 	} else {
 		readedBook := bookToRead
 		err = json.Unmarshal(resp.Source, &readedBook)
-		helpers.ExitOnError("stringify source", err)
+		helpers.ExitOnError("stringify source - ", err)
 
 		return readedBook, err
 	}
@@ -90,7 +90,7 @@ func UpdateBook(bookToUpdate models.Book) (models.Book, error) {
 		Id(bookToUpdate.Id).
 		Doc(doc).
 		DetectNoop(true).
-		Do(Ctx)
+		Do(ctx)
 
 	// if err (not found), return with book param + err
 	if err != nil {
@@ -109,7 +109,7 @@ func DeleteBook(id string) error {
 	_, err := Esclient.Delete().
 		Index("books").
 		Id(id).
-		Do(Ctx)
+		Do(ctx)
 
 	return err
 }
